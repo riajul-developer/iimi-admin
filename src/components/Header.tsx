@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, LogOut, Menu, BarChart3, FileText } from 'lucide-react';
+import { User, LogOut, BarChart3, FileText } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Header: React.FC = () => {

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { User, Lock, Eye, EyeOff, Shield, ArrowRight } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { RegisterResponse, useRegisterMutation } from '../store/services/authApi'
 
@@ -15,7 +14,6 @@ const Register = () => {
   
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
   const [register, { isLoading }] = useRegisterMutation()
-  const navigate = useNavigate()
 
   const handleRegister = async () => {
     setValidationErrors({})
@@ -65,9 +63,6 @@ const Register = () => {
             <div className="relative mb-5">
               <div className="bg-gradient-to-br from-red-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/25">
                 <Shield className="w-8 h-8 text-white" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
               </div>
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">

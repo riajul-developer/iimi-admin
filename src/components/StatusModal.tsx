@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Save, AlertCircle, CheckCircle, Clock, XCircle, FileText, User } from 'lucide-react';
+import { X, Save, AlertCircle, CheckCircle, XCircle, FileText } from 'lucide-react';
 
 // Application Status Enum
 const ApplicationStatus = {
