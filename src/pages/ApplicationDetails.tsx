@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   ArrowLeft,
   User,
@@ -27,7 +26,7 @@ import {
 import { useGetApplicationByIdQuery, useUpdateApplicationMutation } from '../store/services/applicationApi';
 import StatusModal from '../components/StatusModal';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const ApplicationDetails = () => {
   const { id } = useParams();
