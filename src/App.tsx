@@ -9,19 +9,21 @@ import Register from './pages/Register';
 import VerifyEmail from './pages/VerifyEmail';
 import ForgotAuth from './pages/ForgotAuth';
 import ResetAuth from './pages/ResetAuth';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './components/PublicRoute';
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/admin/login" element={<Login />} />
-        <Route path="/admin/register" element={<Register />} />
+        <Route path="/admin/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/admin/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/admin/verify-email" element={<VerifyEmail />} />
-        <Route path="/admin/forgot-auth" element={<ForgotAuth />} />
-        <Route path="/admin/reset-auth" element={<ResetAuth />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/applications" element={<Applications />} />
-        <Route path="/admin/applications/:id" element={<ApplicationDetails />} />
+        <Route path="/admin/forgot-auth" element={<PublicRoute><ForgotAuth /></PublicRoute>} />
+        <Route path="/admin/reset-auth" element={<PublicRoute><ResetAuth /></PublicRoute>} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/admin/applications" element={<ProtectedRoute><Applications /></ProtectedRoute>} />
+        <Route path="/admin/applications/:id" element={<ProtectedRoute><ApplicationDetails /></ProtectedRoute>} />
       </Routes>
     </div>
   );

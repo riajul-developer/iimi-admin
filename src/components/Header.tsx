@@ -1,13 +1,19 @@
 import React from 'react';
 import { User, LogOut, BarChart3, FileText } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Extracting path for active tab
   const currentPath = location.pathname;
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    toast.success('Logout successful'); 
+    navigate('/admin/login');
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
@@ -58,10 +64,7 @@ const Header: React.FC = () => {
             </div>
             <button
               className="flex items-center space-x-1 text-gray-600 hover:text-red-600 transition duration-200 p-2"
-              onClick={() => {
-                // Optional logout logic here
-                navigate('/admin/login');
-              }}
+              onClick={handleLogout}
             >
               <LogOut className="w-4 h-4" />
               <span className="text-sm hidden sm:inline">Logout</span>
