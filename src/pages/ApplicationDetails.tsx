@@ -192,59 +192,87 @@ const ApplicationDetails = () => {
                 <div className="absolute inset-0 bg-black/10"></div>
                 <div className="relative z-10">
                   <div className="w-28 h-28 rounded-3xl bg-white/20 backdrop-blur-sm mx-auto mb-4 overflow-hidden border-4 border-white/30 shadow-2xl">
-                    <img 
-                      src={profile.basic.profilePicFile.url} 
-                      alt="Profile" 
-                      className="w-full h-full object-cover"
-                    />
+                    {profile?.basic?.profilePicFile?.url && (
+                      <img 
+                        src={profile.basic.profilePicFile.url} 
+                        alt="Profile" 
+                        className="w-full h-full object-cover"
+                      />
+                    )}
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-2">{profile.basic.fullName}</h2>
-                  <p className="text-blue-100 text-sm font-semibold mb-1">#{application._id.slice(-8)}</p>
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    {profile?.basic?.fullName || 'N/A'}
+                  </h2>
+                  <p className="text-blue-100 text-sm font-semibold mb-1">
+                    #{application?._id?.slice(-8)}
+                  </p>
                   <p className="text-blue-200 text-sm">Job Applicant</p>
                 </div>
               </div>
 
               {/* Basic Info */}
               <div className="p-6 space-y-4">
-                <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <Mail className="w-4 h-4 text-blue-600" />
+                {profile?.basic?.email && (
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center">
+                      <Mail className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <span className="text-gray-900 font-medium">{profile.basic.email}</span>
                   </div>
-                  <span className="text-gray-900 font-medium">{profile.basic.email}</span>
-                </div>
-                <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center">
-                    <Phone className="w-4 h-4 text-green-600" />
+                )}
+
+                {profile?.basic?.phone && (
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center">
+                      <Phone className="w-4 h-4 text-green-600" />
+                    </div>
+                    <span className="text-gray-900 font-medium">{profile.basic.phone}</span>
                   </div>
-                  <span className="text-gray-900 font-medium">{profile.basic.phone}</span>
-                </div>
-                <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-8 h-8 bg-purple-100 rounded-xl flex items-center justify-center">
-                    <MapPin className="w-4 h-4 text-purple-600" />
+                )}
+
+                {profile?.address?.present && (
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-8 h-8 bg-purple-100 rounded-xl flex items-center justify-center">
+                      <MapPin className="w-4 h-4 text-purple-600" />
+                    </div>
+                    <span className="text-gray-900 font-medium">
+                      {[profile.address.present.street, profile.address.present.upazila, profile.address.present.district].filter(Boolean).join(', ')}
+                    </span>
                   </div>
-                  <span className="text-gray-900 font-medium">{profile.address.present.street}, {profile.address.present.upazila}, {profile.address.present.district}</span>
-                </div>
-                <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-8 h-8 bg-orange-100 rounded-xl flex items-center justify-center">
-                    <User className="w-4 h-4 text-orange-600" />
+                )}
+
+                {profile?.other?.gender && (
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-8 h-8 bg-orange-100 rounded-xl flex items-center justify-center">
+                      <User className="w-4 h-4 text-orange-600" />
+                    </div>
+                    <span className="text-gray-900 font-medium capitalize">{profile.other.gender}</span>
                   </div>
-                  <span className="text-gray-900 font-medium capitalize">{profile.other.gender}</span>
-                </div>
-                <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-8 h-8 bg-red-100 rounded-xl flex items-center justify-center">
-                    <Calendar className="w-4 h-4 text-red-600" />
+                )}
+
+                {profile?.basic?.dateOfBirth && (
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-8 h-8 bg-red-100 rounded-xl flex items-center justify-center">
+                      <Calendar className="w-4 h-4 text-red-600" />
+                    </div>
+                    <span className="text-gray-900 font-medium">
+                      {calculateAge(profile.basic.dateOfBirth)} years old
+                    </span>
                   </div>
-                  <span className="text-gray-900 font-medium">{calculateAge(profile.basic.dateOfBirth)} years old</span>
-                </div>
-                <div className="flex items-center space-x-3 text-sm">
-                  <div className="w-8 h-8 bg-teal-100 rounded-xl flex items-center justify-center">
-                    <Heart className="w-4 h-4 text-teal-600" />
+                )}
+
+                {profile?.other?.maritalStatus && (
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-8 h-8 bg-teal-100 rounded-xl flex items-center justify-center">
+                      <Heart className="w-4 h-4 text-teal-600" />
+                    </div>
+                    <span className="text-gray-900 font-medium capitalize">{profile.other.maritalStatus}</span>
                   </div>
-                  <span className="text-gray-900 font-medium capitalize">{profile.other.maritalStatus}</span>
-                </div>
+                )}
               </div>
             </div>
           </div>
+
           <div className="min-h-screen w-full">
             {/* Content */}
             {activeTab === 'first-phase' && (
