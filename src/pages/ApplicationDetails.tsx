@@ -22,11 +22,13 @@ import {
   FileUser,
   File,
   FileSpreadsheet,
+  UserCheck,
 } from 'lucide-react';
 import { useGetApplicationByIdQuery, useUpdateApplicationMutation } from '../store/services/applicationApi';
 import StatusModal from '../components/StatusModal';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+import FileDisplay from '../components/FileDisplay';
 
 const ApplicationDetails = () => {
   const { id } = useParams();
@@ -37,39 +39,41 @@ const ApplicationDetails = () => {
 
   const navigate = useNavigate();
   
-  // Helper function to get status color
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'submitted':
-        return 'bg-blue-50 text-blue-700 border-blue-200';
+  const getStatusColor = (status: string): string => {
+    switch (status) {
+      case 'applied':
+      return 'bg-blue-100 text-blue-800';
+      case 'scheduled':
+      return 'bg-purple-100 text-purple-800';
+      case 'selected':
+      return 'bg-green-100 text-green-800';
       case 'under-review':
-        return 'bg-yellow-50 text-yellow-700 border-yellow-200';
-      case 'approved':
-        return 'bg-green-50 text-green-700 border-green-200';
+      return 'bg-yellow-100 text-yellow-800';
+      case 'submitted':
+      return 'bg-indigo-100 text-indigo-800';
       case 'rejected':
-        return 'bg-red-50 text-red-700 border-red-200';
-      case 'pending':
-        return 'bg-gray-50 text-gray-700 border-gray-200';
+      return 'bg-red-100 text-red-800';
       default:
-        return 'bg-gray-50 text-gray-700 border-gray-200';
+      return 'bg-gray-100 text-gray-800';
     }
   };
 
-  // Helper function to get status icon
   const getStatusIcon = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'submitted':
-        return <Clock className="w-4 h-4" />;
+    switch (status) {
+      case 'applied':
+      return <Clock className="w-4 h-4" />;
+      case 'scheduled':
+      return <Calendar className="w-4 h-4" />;
+      case 'selected':
+      return <UserCheck className="w-4 h-4" />;
       case 'under-review':
-        return <AlertCircle className="w-4 h-4" />;
-      case 'approved':
-        return <CheckCircle className="w-4 h-4" />;
+      return <AlertCircle className="w-4 h-4" />;
+      case 'submitted':
+      return <Clock className="w-4 h-4" />;
       case 'rejected':
-        return <XCircle className="w-4 h-4" />;
-      case 'pending':
-        return <Clock className="w-4 h-4" />;
+      return <XCircle className="w-4 h-4" />;
       default:
-        return <Clock className="w-4 h-4" />;
+      return <Clock className="w-4 h-4" />;
     }
   };
 
@@ -628,70 +632,71 @@ const ApplicationDetails = () => {
                       <h3 className="text-xl font-bold text-gray-900">Personal Documents</h3>
                     </div>
                   </div>
-                  <div className="p-8">
-                    {profile?.education && (profile.education.degree || profile.education.cgpaOrGpa || profile.education.passingYear || profile.education.certificateFile) ? (
-                      <>
-                        {(profile.education.degree || profile.education.cgpaOrGpa || profile.education.passingYear) && (
-                          <div className="pb-8 grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-4">
-                            {profile.education.degree && (
-                              <div>
-                                <label className="text-sm font-bold text-gray-500 mb-1 block uppercase tracking-wide">Degree</label>
-                                <p className="text-gray-900 font-semibold text-lg capitalize">{profile.education.degree}</p>
-                              </div>
-                            )}
-                            {profile.education.cgpaOrGpa && (
-                              <div>
-                                <label className="text-sm font-bold text-gray-500 mb-1 block uppercase tracking-wide">CGPA / GPA</label>
-                                <p className="text-gray-900 font-semibold text-lg">{profile.education.cgpaOrGpa}</p>
-                              </div>
-                            )}
-                            {profile.education.passingYear && (
-                              <div>
-                                <label className="text-sm font-bold text-gray-500 mb-1 block uppercase tracking-wide">Passing Year</label>
-                                <p className="text-gray-900 font-semibold text-lg">{profile.education.passingYear}</p>
-                              </div>
-                            )}
+                  <div className="p-8 space-y-8">
+                    {/* SSC Certificate */}
+                    {profile?.educationFiles?.sscCertFile && (
+                      <div>
+                        <p className="text-gray-900 font-semibold text-lg">SSC Certificate</p>
+                        <div className="flex items-center justify-between bg-gradient-to-r from-blue-100 to-indigo-100 p-4 rounded-xl border border-gray-200">
+                          <div className="flex items-center space-x-3">
+                            <File className="w-5 h-5 text-indigo-600" />
+                            <span className="text-gray-800 font-semibold">{profile.educationFiles.sscCertFile.name}</span>
                           </div>
-                        )}
-                        {profile.education.certificateFile && (
-                          <div className='pb-8 space-y-4'>
-                            <p className="text-gray-900 font-semibold text-lg">Certificate/ Mark Sheet (Latest)</p>
-                            <div className="flex items-center justify-between bg-gradient-to-r from-blue-100 to-indigo-100 p-4 rounded-xl border border-gray-200">
-                              <div className="flex items-center space-x-3">
-                                <File className="w-5 h-5 text-indigo-600" />
-                                <span className="text-gray-800 font-semibold">{profile.education.certificateFile.name}</span>
-                              </div>
-                              <button onClick={() => window.open(profile.education.certificateFile.url, '_blank')} className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition">
-                                <Eye className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                        {profile?.testimonial && profile.testimonial.testimonialFile && (
-                          <div className="space-y-4">
-                            <p className="text-gray-900 font-semibold text-lg">
-                              Testimonial/ Chairman Certificate
-                              {profile.testimonial.title && (
-                                <span className="font-bold text-gray-500 tracking-wide">: {profile.testimonial.title}</span>
-                              )}
-                            </p>
-                            <div className="flex items-center justify-between bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-xl border border-gray-200">
-                              <div className="flex items-center space-x-3">
-                                <File className="w-5 h-5 text-purple-600" />
-                                <span className="text-gray-800 font-semibold">{profile.testimonial.testimonialFile.name}</span>
-                              </div>
-                              <button onClick={() => window.open(profile.testimonial.testimonialFile.url, '_blank')} className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition">
-                                <Eye className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="text-center py-8">
-                        <p className="text-gray-500 text-lg font-medium">No personal documents found</p>
+                          <button
+                            onClick={() => window.open(profile.educationFiles.sscCertFile.url, '_blank')}
+                            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     )}
+
+                    {/* Last Certificate */}
+                    {profile?.educationFiles?.lastCertFile && (
+                      <div>
+                        <p className="text-gray-900 font-semibold text-lg">Last Certificate / Mark Sheet</p>
+                        <div className="flex items-center justify-between bg-gradient-to-r from-blue-100 to-indigo-100 p-4 rounded-xl border border-gray-200">
+                          <div className="flex items-center space-x-3">
+                            <File className="w-5 h-5 text-indigo-600" />
+                            <span className="text-gray-800 font-semibold">{profile.educationFiles.lastCertFile.name}</span>
+                          </div>
+                          <button
+                            onClick={() => window.open(profile.educationFiles.lastCertFile.url, '_blank')}
+                            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Testimonial */}
+                    {profile?.testimonialFile && (
+                      <div>
+                        <p className="text-gray-900 font-semibold text-lg">Testimonial / Chairman Certificate</p>
+                        <div className="flex items-center justify-between bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-xl border border-gray-200">
+                          <div className="flex items-center space-x-3">
+                            <File className="w-5 h-5 text-purple-600" />
+                            <span className="text-gray-800 font-semibold">{profile.testimonialFile.name}</span>
+                          </div>
+                          <button
+                            onClick={() => window.open(profile.testimonialFile.url, '_blank')}
+                            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {!profile?.educationFiles?.sscCertFile &&
+                      !profile?.educationFiles?.lastCertFile &&
+                      !profile?.testimonialFile && (
+                        <div className="text-center py-8">
+                          <p className="text-gray-500 text-lg font-medium">No personal documents found</p>
+                        </div>
+                      )}
                   </div>
                 </div>
 
@@ -705,53 +710,76 @@ const ApplicationDetails = () => {
                       <h3 className="text-xl font-bold text-gray-900">Official Documents</h3>
                     </div>
                   </div>
-                  <div className="p-8">
-                    {(profile?.myVerified && profile.myVerified.myVerifiedFile) || (profile?.commitmentNote && profile.commitmentNote.commitmentFile) ? (
-                      <>
-                        {profile?.myVerified && profile.myVerified.myVerifiedFile && (
-                          <div className='pb-8 space-y-4'>
-                            <p className="text-gray-900 font-semibold text-lg">
-                              Personal Information Verified
-                              {profile.myVerified.title && (
-                                <span className="font-bold text-gray-500 tracking-wide"> Title : {profile.myVerified.title}</span>
-                              )}
-                            </p>
-                            <div className="flex items-center justify-between bg-gradient-to-r from-blue-100 to-indigo-100 p-4 rounded-xl border border-gray-200">
-                              <div className="flex items-center space-x-3">
-                                <File className="w-5 h-5 text-indigo-600" />
-                                <span className="text-gray-800 font-semibold">{profile.myVerified.myVerifiedFile.name}</span>
-                              </div>
-                              <button onClick={() => window.open(profile.myVerified.myVerifiedFile.url, '_blank')} className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition">
-                                <Eye className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                        {profile?.commitmentNote && profile.commitmentNote.commitmentFile && (
-                          <div className="space-y-4">
-                            <p className="text-gray-900 font-semibold text-lg">
-                              Letter of Understanding
-                              {profile.commitmentNote.title && (
-                                <span className="font-bold text-gray-500 tracking-wide"> Title : {profile.commitmentNote.title}</span>
-                              )}
-                            </p>
-                            <div className="flex items-center justify-between bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-xl border border-gray-200">
-                              <div className="flex items-center space-x-3">
-                                <File className="w-5 h-5 text-purple-600" />
-                                <span className="text-gray-800 font-semibold">{profile.commitmentNote.commitmentFile.name}</span>
-                              </div>
-                              <button onClick={() => window.open(profile.commitmentNote.commitmentFile.url, '_blank')} className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition">
-                                <Eye className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <div className="text-center py-8">
-                        <p className="text-gray-500 text-lg font-medium">No official documents found</p>
-                      </div>
+                  <div className="p-8 space-y-8">
+                    {/* My Verified File */}
+                    {profile?.myVerifiedFile && (
+                      <FileDisplay
+                        title="Personal Info Verified"
+                        file={profile.myVerifiedFile}
+                        gradient="from-blue-100 to-indigo-100"
+                        iconColor="text-indigo-600"
+                      />
                     )}
+
+                    {/* Commitment Note */}
+                    {profile?.commitmentFile && (
+                      <FileDisplay
+                        title="Letter of Understanding"
+                        file={profile.commitmentFile}
+                        gradient="from-purple-100 to-pink-100"
+                        iconColor="text-purple-600"
+                      />
+                    )}
+
+                    {/* NDA First Page */}
+                    {profile?.ndaFiles?.firstPageFile && (
+                      <FileDisplay
+                        title="NDA - First Page"
+                        file={profile?.ndaFiles?.firstPageFile}
+                        gradient="from-yellow-100 to-orange-100"
+                        iconColor="text-yellow-600"
+                      />
+                    )}
+
+                    {/* NDA Second Page */}
+                    {profile?.ndaFiles?.secondPageFile && (
+                      <FileDisplay
+                        title="NDA - Second Page"
+                        file={profile?.ndaFiles?.secondPageFile}
+                        gradient="from-yellow-100 to-orange-100"
+                        iconColor="text-yellow-600"
+                      />
+                    )}
+
+                    {/* Agreement First Page */}
+                    {profile?.agreementFiles?.firstPageFile && (
+                      <FileDisplay
+                        title="Agreement - First Page"
+                        file={profile?.agreementFiles?.firstPageFile}
+                        gradient="from-green-100 to-lime-100"
+                        iconColor="text-green-600"
+                      />
+                    )}
+
+                    {/* Agreement Second Page */}
+                    {profile?.agreementFiles?.secondPageFile && (
+                      <FileDisplay
+                        title="Agreement - Second Page"
+                        file={profile?.agreementFiles?.secondPageFile}
+                        gradient="from-green-100 to-lime-100"
+                        iconColor="text-green-600"
+                      />
+                    )}
+
+                    {/* If no files */}
+                    {!profile?.myVerifiedFile &&
+                      !profile?.commitmentFile &&
+                      !profile?.agreementFiles &&
+                      !profile?.ndaFiles && (
+                        <div className="text-center py-8">
+                          <p className="text-gray-500 text-lg font-medium">No official documents found</p>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>

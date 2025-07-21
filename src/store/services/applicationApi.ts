@@ -3,7 +3,7 @@ import { baseQuery } from '../../utils/baseQuery'
 
 export interface Application {
   _id: string;
-  status: 'submitted' | 'under-review' | 'approved' | 'rejected';
+  status: 'applied' | 'scheduled' | 'selected' | 'under-review' | 'submitted' | 'rejected';
   name: string;
   email: string;
   phone: string;

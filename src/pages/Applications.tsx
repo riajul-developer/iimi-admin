@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Eye, Clock, CheckCircle, XCircle, AlertCircle, ChevronDown, ChevronLeft, ChevronRight, Search } from 'lucide-react';
+import { User, Eye, Clock, CheckCircle, XCircle, AlertCircle, ChevronDown, ChevronLeft, ChevronRight, Search, Calendar, UserCheck } from 'lucide-react';
 import Header from '../components/Header';
 import { useGetApplicationsQuery, useUpdateApplicationMutation } from '../store/services/applicationApi';
 import { useNavigate } from 'react-router-dom';
@@ -31,33 +31,60 @@ const Applications: React.FC = () => {
     const applicationsState = applicationsData?.data;
     const meta = applicationsData?.data?.meta;
 
-    const getStatusColor = (status: any): string => {
+    const getStatusColor = (status: string): string => {
         switch (status) {
-        case 'submitted': return 'bg-blue-100 text-blue-800';
-        case 'under-review': return 'bg-yellow-100 text-yellow-800';
-        case 'approved': return 'bg-green-100 text-green-800';
-        case 'rejected': return 'bg-red-100 text-red-800';
-        default: return 'bg-gray-100 text-gray-800';
+            case 'applied':
+            return 'bg-blue-100 text-blue-800';
+            case 'scheduled':
+            return 'bg-purple-100 text-purple-800';
+            case 'selected':
+            return 'bg-green-100 text-green-800';
+            case 'under-review':
+            return 'bg-yellow-100 text-yellow-800';
+            case 'submitted':
+            return 'bg-indigo-100 text-indigo-800';
+            case 'rejected':
+            return 'bg-red-100 text-red-800';
+            default:
+            return 'bg-gray-100 text-gray-800';
         }
     };
 
-    const getStatusText = (status: any): string => {
+    const getStatusText = (status: string): string => {
         switch (status) {
-        case 'submitted': return 'Submitted';
-        case 'under-review': return 'Under Review';
-        case 'approved': return 'Approved';
-        case 'rejected': return 'Rejected';
-        default: return status;
+            case 'applied':
+            return 'Applied';
+            case 'scheduled':
+            return 'Scheduled';
+            case 'selected':
+            return 'Selected';
+            case 'under-review':
+            return 'Under Review';
+            case 'submitted':
+            return 'Submitted';
+            case 'rejected':
+            return 'Rejected';
+            default:
+            return status;
         }
     };
 
-    const getStatusIcon = (status: any) => {
+    const getStatusIcon = (status: string) => {
         switch (status) {
-        case 'submitted': return <Clock className="w-4 h-4" />;
-        case 'under-review': return <AlertCircle className="w-4 h-4" />;
-        case 'approved': return <CheckCircle className="w-4 h-4" />;
-        case 'rejected': return <XCircle className="w-4 h-4" />;
-        default: return <Clock className="w-4 h-4" />;
+            case 'applied':
+            return <Clock className="w-4 h-4" />;
+            case 'scheduled':
+            return <Calendar className="w-4 h-4" />;
+            case 'selected':
+            return <UserCheck className="w-4 h-4" />;
+            case 'under-review':
+            return <AlertCircle className="w-4 h-4" />;
+            case 'submitted':
+            return <Clock className="w-4 h-4" />;
+            case 'rejected':
+            return <XCircle className="w-4 h-4" />;
+            default:
+            return <Clock className="w-4 h-4" />;
         }
     };
 
@@ -173,9 +200,11 @@ const Applications: React.FC = () => {
                                     className="w-[150px] border border-gray-300 rounded-md px-3 py-2 text-sm"
                                 >
                                     <option value="">All Status</option>
-                                    <option value="submitted">Submitted</option>
+                                    <option value="applied">Applied</option>
+                                    <option value="scheduled">Scheduled</option>
+                                    <option value="selected">Selected</option>
                                     <option value="under-review">Under Review</option>
-                                    <option value="approved">Approved</option>
+                                    <option value="submitted">Submitted</option>
                                     <option value="rejected">Rejected</option>
                                 </select>
                                 <input

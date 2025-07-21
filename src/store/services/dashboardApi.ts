@@ -6,21 +6,23 @@ interface DashboardResponse {
   message: string;
   data: {
     totalApplications: number;
-    submittedCount: number;
+    appliedCount: number;
+    scheduledCount: number;
+    selectedCount: number;
     underReviewCount: number;
-    approvedCount: number;
+    submittedCount: number;
     rejectedCount: number;
   };
 }
 
 export interface RecentApplication {
   _id: string;
-  status: 'submitted' | 'under-review' | 'approved' | 'rejected';
+  status: 'applied' | 'scheduled' | 'selected' | 'under-review' | 'submitted' | 'rejected';
   name: string;
   email: string;
   phone: string;
   profileImage: string;
-  submittedDate: string; 
+  submittedDate: string;
 }
 
 export interface RecentApplicationsResponse {
