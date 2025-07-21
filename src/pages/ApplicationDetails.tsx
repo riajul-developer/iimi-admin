@@ -4,7 +4,6 @@ import {
   User,
   FileText,
   Download,
-  CheckCircle,
   Clock,
   AlertCircle,
   XCircle,
@@ -28,6 +27,7 @@ import { useGetApplicationByIdQuery, useUpdateApplicationMutation } from '../sto
 import StatusModal from '../components/StatusModal';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useMergedPdfDownload } from '../utils/useMergedPdfDownload';
 import FileDisplay from '../components/FileDisplay';
 
 const ApplicationDetails = () => {
@@ -36,6 +36,9 @@ const ApplicationDetails = () => {
   const [updateApplication] = useUpdateApplicationMutation();
   const [activeTab, setActiveTab] = useState('first-phase');
   const [statusModalOpen, setStatusModalOpen] = useState(false);
+
+  
+  const { downloadAndViewMergedPdf } = useMergedPdfDownload();
 
   const navigate = useNavigate();
   
@@ -144,7 +147,6 @@ const ApplicationDetails = () => {
 
   const application = data.data.application;
   const profile = data.data.profile;
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -273,6 +275,67 @@ const ApplicationDetails = () => {
                   </div>
                 )}
               </div>
+              <button 
+                onClick={() => {
+                    const files: {label: string; url: string}[] = [];
+
+                    if (profile?.basic?.profilePicFile?.url) {
+                      files.push({label : "Profile Picture", url: profile.basic.profilePicFile.url});
+                    }
+
+                    if (profile?.identity?.docFiles?.length > 0) {
+                      for (const doc of profile.identity.docFiles) {
+                        files.push({label: `${doc.type} ${doc.side}`, url: doc.url});
+                      }
+                    }
+
+                    if (profile?.cvFile?.url) {
+                      files.push({label: 'Resume / CV', url: profile?.cvFile?.url });
+                    }
+
+                    if (profile?.educationFiles?.sscCertFile) {
+                      files.push({label: 'SSC Certificate', url: profile?.educationFiles?.sscCertFile.url });
+                    }
+
+                    if (profile?.educationFiles?.lastCertFile) {
+                      files.push({label: 'Last Certificate', url: profile?.educationFiles?.lastCertFile.url });
+                    }
+
+                    if (profile?.testimonialFile) {
+                      files.push({label: 'Testimonial / Chairman Certificate', url: profile?.testimonialFile.url });
+                    }
+
+                    if (profile?.myVerifiedFile) {
+                      files.push({label: 'Personal Information Verified', url: profile?.myVerifiedFile.url });
+                    }
+
+                    if (profile?.commitmentFile) {
+                      files.push({label: 'Letter Of Understanding', url: profile?.commitmentFile.url });
+                    }
+
+                    if (profile?.ndaFiles?.firstPageFile) {
+                      files.push({label: 'NDA First Page', url: profile?.ndaFiles?.firstPageFile.url });
+                    }
+
+                    if (profile?.ndaFiles?.secondPageFile) {
+                      files.push({label: 'NDA Second Page', url: profile?.ndaFiles?.secondPageFile.url });
+                    }
+
+                    if (profile?.agreementFiles?.firstPageFile) {
+                      files.push({label: 'Agreement First Page', url: profile?.agreementFiles?.firstPageFile.url });
+                    }
+                    
+                    if (profile?.agreementFiles?.secondPageFile) {
+                      files.push({label: 'Agreement Second Page', url: profile?.agreementFiles?.secondPageFile.url });
+                    }
+
+                    downloadAndViewMergedPdf(files, { application, profile });
+                  }}
+                    className="flex items-center gap-2 px-4 py-2 mx-auto bg-red-600 text-white rounded hover:bg-red-700 mb-7"
+                >
+                  Download Pdf File
+                  <Download size={18} />
+              </button>
             </div>
           </div>
 
@@ -343,7 +406,7 @@ const ApplicationDetails = () => {
                 </div>
                 {/* Emergency Contact */}
                 <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden">
-                  <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50 flex items-center">
+                  <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center">
                         <Phone className="w-5 h-5 text-white" />
@@ -376,7 +439,7 @@ const ApplicationDetails = () => {
                 </div>
                 {/* Address Info */}
                 <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden">
-                  <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50 flex items-center">
+                  <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center">
                         <MapPin className="w-5 h-5 text-white" />
@@ -416,7 +479,7 @@ const ApplicationDetails = () => {
                 </div>
                 {/* Other Information */}
                 <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden">
-                  <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-yellow-50 to-orange-50 flex items-center">
+                  <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center">
                         <Info className="w-5 h-5 text-white" />
@@ -503,7 +566,7 @@ const ApplicationDetails = () => {
                 </div>
                 {/* Application Info */}
                 <div className="bg-white/90 backdrop-blur-sm rounded-b-[12px] shadow-xl border border-white/20 overflow-hidden">
-                  <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-green-50 to-teal-50">
+                  <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50 flex items-center space-x-3">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl flex items-center justify-center">
                         <Briefcase className="w-5 h-5 text-white" />
@@ -572,7 +635,7 @@ const ApplicationDetails = () => {
               <div className="w-full">
                 {/* Work Info */}
                 <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden rounded-t-[12px]">
-                  <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-amber-50 to-yellow-50 flex items-center">
+                  <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center">
                         <Briefcase className="w-5 h-5 text-white" />
@@ -635,59 +698,32 @@ const ApplicationDetails = () => {
                   <div className="p-8 space-y-8">
                     {/* SSC Certificate */}
                     {profile?.educationFiles?.sscCertFile && (
-                      <div>
-                        <p className="text-gray-900 font-semibold text-lg">SSC Certificate</p>
-                        <div className="flex items-center justify-between bg-gradient-to-r from-blue-100 to-indigo-100 p-4 rounded-xl border border-gray-200">
-                          <div className="flex items-center space-x-3">
-                            <File className="w-5 h-5 text-indigo-600" />
-                            <span className="text-gray-800 font-semibold">{profile.educationFiles.sscCertFile.name}</span>
-                          </div>
-                          <button
-                            onClick={() => window.open(profile.educationFiles.sscCertFile.url, '_blank')}
-                            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
+                      <FileDisplay
+                        title="SSC Certificate / Mark Sheet"
+                        file={profile.educationFiles.sscCertFile}
+                        gradient="from-blue-100 to-indigo-100"
+                        iconColor="text-indigo-600"
+                      />
                     )}
 
                     {/* Last Certificate */}
                     {profile?.educationFiles?.lastCertFile && (
-                      <div>
-                        <p className="text-gray-900 font-semibold text-lg">Last Certificate / Mark Sheet</p>
-                        <div className="flex items-center justify-between bg-gradient-to-r from-blue-100 to-indigo-100 p-4 rounded-xl border border-gray-200">
-                          <div className="flex items-center space-x-3">
-                            <File className="w-5 h-5 text-indigo-600" />
-                            <span className="text-gray-800 font-semibold">{profile.educationFiles.lastCertFile.name}</span>
-                          </div>
-                          <button
-                            onClick={() => window.open(profile.educationFiles.lastCertFile.url, '_blank')}
-                            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
+                      <FileDisplay
+                        title="Last Certificate / Mark Sheet"
+                        file={profile.educationFiles.lastCertFile}
+                        gradient="from-blue-100 to-indigo-100"
+                        iconColor="text-indigo-600"
+                      />
                     )}
 
                     {/* Testimonial */}
                     {profile?.testimonialFile && (
-                      <div>
-                        <p className="text-gray-900 font-semibold text-lg">Testimonial / Chairman Certificate</p>
-                        <div className="flex items-center justify-between bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-xl border border-gray-200">
-                          <div className="flex items-center space-x-3">
-                            <File className="w-5 h-5 text-purple-600" />
-                            <span className="text-gray-800 font-semibold">{profile.testimonialFile.name}</span>
-                          </div>
-                          <button
-                            onClick={() => window.open(profile.testimonialFile.url, '_blank')}
-                            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 hover:scale-110 transition"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
+                      <FileDisplay
+                        title="Testimonial / Chairman Certificate"
+                        file={profile.testimonialFile}
+                        gradient="from-blue-100 to-indigo-100"
+                        iconColor="text-indigo-600"
+                      />
                     )}
 
                     {!profile?.educationFiles?.sscCertFile &&
@@ -726,8 +762,8 @@ const ApplicationDetails = () => {
                       <FileDisplay
                         title="Letter of Understanding"
                         file={profile.commitmentFile}
-                        gradient="from-purple-100 to-pink-100"
-                        iconColor="text-purple-600"
+                        gradient="from-blue-100 to-indigo-100"
+                        iconColor="text-indigo-600"
                       />
                     )}
 
@@ -736,8 +772,8 @@ const ApplicationDetails = () => {
                       <FileDisplay
                         title="NDA - First Page"
                         file={profile?.ndaFiles?.firstPageFile}
-                        gradient="from-yellow-100 to-orange-100"
-                        iconColor="text-yellow-600"
+                        gradient="from-blue-100 to-indigo-100"
+                        iconColor="text-indigo-600"
                       />
                     )}
 
@@ -746,8 +782,8 @@ const ApplicationDetails = () => {
                       <FileDisplay
                         title="NDA - Second Page"
                         file={profile?.ndaFiles?.secondPageFile}
-                        gradient="from-yellow-100 to-orange-100"
-                        iconColor="text-yellow-600"
+                        gradient="from-blue-100 to-indigo-100"
+                        iconColor="text-indigo-600"
                       />
                     )}
 
@@ -756,8 +792,8 @@ const ApplicationDetails = () => {
                       <FileDisplay
                         title="Agreement - First Page"
                         file={profile?.agreementFiles?.firstPageFile}
-                        gradient="from-green-100 to-lime-100"
-                        iconColor="text-green-600"
+                        gradient="from-blue-100 to-indigo-100"
+                        iconColor="text-indigo-600"
                       />
                     )}
 
@@ -766,8 +802,8 @@ const ApplicationDetails = () => {
                       <FileDisplay
                         title="Agreement - Second Page"
                         file={profile?.agreementFiles?.secondPageFile}
-                        gradient="from-green-100 to-lime-100"
-                        iconColor="text-green-600"
+                        gradient="from-blue-100 to-indigo-100"
+                        iconColor="text-indigo-600"
                       />
                     )}
 
