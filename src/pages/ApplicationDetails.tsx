@@ -32,51 +32,51 @@ import FileDisplay from '../components/FileDisplay';
 
 const ApplicationDetails = () => {
   const { id } = useParams();
-  const { data, isLoading, error, refetch  } = useGetApplicationByIdQuery(id!);
+  const { data, isLoading, error, refetch } = useGetApplicationByIdQuery(id!);
   const [updateApplication] = useUpdateApplicationMutation();
   const [activeTab, setActiveTab] = useState('first-phase');
   const [statusModalOpen, setStatusModalOpen] = useState(false);
 
-  
+
   const { downloadAndViewMergedPdf } = useMergedPdfDownload();
 
   const navigate = useNavigate();
-  
+
   const getStatusColor = (status: string): string => {
     switch (status) {
       case 'applied':
-      return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800';
       case 'scheduled':
-      return 'bg-purple-100 text-purple-800';
+        return 'bg-purple-100 text-purple-800';
       case 'selected':
-      return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800';
       case 'under-review':
-      return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800';
       case 'submitted':
-      return 'bg-indigo-100 text-indigo-800';
+        return 'bg-indigo-100 text-indigo-800';
       case 'rejected':
-      return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800';
       default:
-      return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'applied':
-      return <Clock className="w-4 h-4" />;
+        return <Clock className="w-4 h-4" />;
       case 'scheduled':
-      return <Calendar className="w-4 h-4" />;
+        return <Calendar className="w-4 h-4" />;
       case 'selected':
-      return <UserCheck className="w-4 h-4" />;
+        return <UserCheck className="w-4 h-4" />;
       case 'under-review':
-      return <AlertCircle className="w-4 h-4" />;
+        return <AlertCircle className="w-4 h-4" />;
       case 'submitted':
-      return <Clock className="w-4 h-4" />;
+        return <Clock className="w-4 h-4" />;
       case 'rejected':
-      return <XCircle className="w-4 h-4" />;
+        return <XCircle className="w-4 h-4" />;
       default:
-      return <Clock className="w-4 h-4" />;
+        return <Clock className="w-4 h-4" />;
     }
   };
 
@@ -109,7 +109,7 @@ const ApplicationDetails = () => {
     link.click();
   };
 
-  const handleUpdateStatus = async (applicationId : string, updateData : { status: string; adminNotes?: string; rejectionReason?: string }) => {
+  const handleUpdateStatus = async (applicationId: string, updateData: { status: string; adminNotes?: string; rejectionReason?: string }) => {
     try {
       await updateApplication({
         id: applicationId,
@@ -151,42 +151,53 @@ const ApplicationDetails = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-white/20 px-6 py-3 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <button onClick={() => navigate(-1)} className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-all duration-200 hover:scale-105">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-white/20 px-4 sm:px-6 py-3 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-all duration-200 hover:scale-105"
+          >
             <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">Back to Previous Page</span>
+            <span className="font-semibold text-sm sm:text-base">Back to Previous Page</span>
           </button>
-          {/* Tabs */}
-          <div className=" flex items-center justify-end">
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => setStatusModalOpen(!statusModalOpen)}
-                  className={`px-6 py-3 rounded-[12px] border-2 ${getStatusColor(application.status)} flex items-center space-x-3 shadow-lg`}
-                >
-                  {getStatusIcon(application.status)}
-                  <span className="font-bold capitalize text-sm tracking-wide">
-                    {application.status.replace('-', ' ')}
-                  </span>
-                </button>
-                {[{ id: 'first-phase', label: '1st Phase', icon: FileText }, { id: 'second-phase', label: '2nd Phase', icon: FileText }].map(tab => (
-                    <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 whitespace-nowrap ${
-                        activeTab === tab.id
-                        ? 'bg-gradient-to-r from-red-400 to-red-600 text-white shadow-lg transform scale-105'
-                        : 'text-gray-600 hover:text-gray-900 bg-gray-200'
-                    }`}
-                    >
-                    <tab.icon className="w-4 h-4" />
-                    <span>{tab.label}</span>
-                    </button>
-                ))}
-              </div>
+
+          {/* Tabs and Status */}
+          <div className="w-full sm:w-auto flex flex-col sm:flex-row items-start sm:items-center justify-end gap-3 sm:gap-4">
+
+            {/* Status Button */}
+            <button
+              onClick={() => setStatusModalOpen(!statusModalOpen)}
+              className={`w-full sm:w-auto px-6 py-3 rounded-[12px] border-2 ${getStatusColor(application.status)} flex items-center justify-center sm:justify-start space-x-3 shadow-lg`}
+            >
+              {getStatusIcon(application.status)}
+              <span className="font-bold capitalize text-sm tracking-wide">
+                {application.status.replace('-', ' ')}
+              </span>
+            </button>
+
+            {/* Tab Buttons */}
+            {[
+              { id: 'first-phase', label: '1st Phase', icon: FileText },
+              { id: 'second-phase', label: '2nd Phase', icon: FileText },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`w-full sm:w-auto flex items-center justify-center sm:justify-start space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 whitespace-nowrap ${activeTab === tab.id
+                    ? 'bg-gradient-to-r from-red-400 to-red-600 text-white shadow-lg transform scale-105'
+                    : 'text-gray-600 hover:text-gray-900 bg-gray-200'
+                  }`}
+              >
+                <tab.icon className="w-4 h-4" />
+                <span>{tab.label}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
+
       <div className="max-w-7xl mx-auto px-6 py-5">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left Sidebar - Profile Card */}
@@ -198,9 +209,9 @@ const ApplicationDetails = () => {
                 <div className="relative z-10">
                   <div className="w-28 h-28 rounded-3xl bg-white/20 backdrop-blur-sm mx-auto mb-4 overflow-hidden border-4 border-white/30 shadow-2xl">
                     {profile?.basic?.profilePicFile?.url && (
-                      <img 
-                        src={profile.basic.profilePicFile.url} 
-                        alt="Profile" 
+                      <img
+                        src={profile.basic.profilePicFile.url}
+                        alt="Profile"
                         className="w-full h-full object-cover"
                       />
                     )}
@@ -275,66 +286,66 @@ const ApplicationDetails = () => {
                   </div>
                 )}
               </div>
-              <button 
+              <button
                 onClick={() => {
-                    const files: {label: string; url: string}[] = [];
+                  const files: { label: string; url: string }[] = [];
+                  if (profile?.basic?.profilePicFile?.url) {
+                    files.push({ label: "Profile Picture", url: profile.basic.profilePicFile.url });
+                  }
 
-                    if (profile?.basic?.profilePicFile?.url) {
-                      files.push({label : "Profile Picture", url: profile.basic.profilePicFile.url});
+                  if (profile?.identity?.docFiles?.length > 0) {
+                    for (const doc of profile.identity.docFiles) {
+                      files.push({ label: `${doc.type} ${doc.side}`, url: doc.url });
                     }
+                  }
 
-                    if (profile?.identity?.docFiles?.length > 0) {
-                      for (const doc of profile.identity.docFiles) {
-                        files.push({label: `${doc.type} ${doc.side}`, url: doc.url});
-                      }
-                    }
+                  if (profile?.cvFile?.url) {
+                    files.push({ label: 'Resume / CV', url: profile?.cvFile?.url });
+                  }
 
-                    if (profile?.cvFile?.url) {
-                      files.push({label: 'Resume / CV', url: profile?.cvFile?.url });
-                    }
+                  if (profile?.educationFiles?.sscCertFile) {
+                    files.push({ label: 'SSC Certificate', url: profile?.educationFiles?.sscCertFile.url });
+                  }
 
-                    if (profile?.educationFiles?.sscCertFile) {
-                      files.push({label: 'SSC Certificate', url: profile?.educationFiles?.sscCertFile.url });
-                    }
+                  if (profile?.educationFiles?.lastCertFile) {
+                    files.push({ label: 'Last Certificate', url: profile?.educationFiles?.lastCertFile.url });
+                  }
 
-                    if (profile?.educationFiles?.lastCertFile) {
-                      files.push({label: 'Last Certificate', url: profile?.educationFiles?.lastCertFile.url });
-                    }
+                  if (profile?.testimonialFile) {
+                    files.push({ label: 'Testimonial / Chairman Certificate', url: profile?.testimonialFile.url });
+                  }
 
-                    if (profile?.testimonialFile) {
-                      files.push({label: 'Testimonial / Chairman Certificate', url: profile?.testimonialFile.url });
-                    }
+                  if (profile?.myVerifiedFile) {
+                    files.push({ label: 'Personal Information Verified', url: profile?.myVerifiedFile.url });
+                  }
 
-                    if (profile?.myVerifiedFile) {
-                      files.push({label: 'Personal Information Verified', url: profile?.myVerifiedFile.url });
-                    }
+                  if (profile?.commitmentFile) {
+                    files.push({ label: 'Letter Of Understanding', url: profile?.commitmentFile.url });
+                  }
 
-                    if (profile?.commitmentFile) {
-                      files.push({label: 'Letter Of Understanding', url: profile?.commitmentFile.url });
-                    }
+                  if (profile?.ndaFiles?.firstPageFile) {
+                    files.push({ label: 'NDA First Page', url: profile?.ndaFiles?.firstPageFile.url });
+                  }
 
-                    if (profile?.ndaFiles?.firstPageFile) {
-                      files.push({label: 'NDA First Page', url: profile?.ndaFiles?.firstPageFile.url });
-                    }
+                  if (profile?.ndaFiles?.secondPageFile) {
+                    files.push({ label: 'NDA Second Page', url: profile?.ndaFiles?.secondPageFile.url });
+                  }
 
-                    if (profile?.ndaFiles?.secondPageFile) {
-                      files.push({label: 'NDA Second Page', url: profile?.ndaFiles?.secondPageFile.url });
-                    }
+                  if (profile?.agreementFiles?.firstPageFile) {
+                    files.push({ label: 'Agreement First Page', url: profile?.agreementFiles?.firstPageFile.url });
+                  }
 
-                    if (profile?.agreementFiles?.firstPageFile) {
-                      files.push({label: 'Agreement First Page', url: profile?.agreementFiles?.firstPageFile.url });
-                    }
-                    
-                    if (profile?.agreementFiles?.secondPageFile) {
-                      files.push({label: 'Agreement Second Page', url: profile?.agreementFiles?.secondPageFile.url });
-                    }
+                  if (profile?.agreementFiles?.secondPageFile) {
+                    files.push({ label: 'Agreement Second Page', url: profile?.agreementFiles?.secondPageFile.url });
+                  }
+                  console.log(files);
 
-                    downloadAndViewMergedPdf(files, { application, profile });
-                  }}
-                    className="flex items-center gap-2 px-4 py-2 mx-auto bg-red-600 text-white rounded hover:bg-red-700 mb-7"
-                >
-                  Download Pdf File
-                  <Download size={18} />
+                  downloadAndViewMergedPdf(files, { application, profile });
+                }}
+                className="flex items-center gap-2 px-4 py-2 mx-auto bg-red-600 text-white rounded hover:bg-red-700 mb-7"
+              >
+                Download Pdf File
+                <Download size={18} />
               </button>
             </div>
           </div>
@@ -448,8 +459,8 @@ const ApplicationDetails = () => {
                     </div>
                   </div>
                   <div className="p-8">
-                    {(profile?.address?.present && (profile.address.present.street || profile.address.present.upazila || profile.address.present.district)) || 
-                    (profile?.address?.permanent && (profile.address.permanent.street || profile.address.permanent.upazila || profile.address.permanent.district)) ? (
+                    {(profile?.address?.present && (profile.address.present.street || profile.address.present.upazila || profile.address.present.district)) ||
+                      (profile?.address?.permanent && (profile.address.permanent.street || profile.address.permanent.upazila || profile.address.permanent.district)) ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                         {/* Present Address */}
                         {profile?.address?.present && (profile.address.present.street || profile.address.present.upazila || profile.address.present.district) && (
@@ -630,7 +641,7 @@ const ApplicationDetails = () => {
                 </div>
               </div>
             )}
-            
+
             {activeTab === 'second-phase' && (
               <div className="w-full">
                 {/* Work Info */}
@@ -830,7 +841,7 @@ const ApplicationDetails = () => {
         application={application}
         onUpdateStatus={handleUpdateStatus}
       />
-      
+
     </div>
   );
 };

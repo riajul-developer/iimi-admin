@@ -208,17 +208,17 @@ const Dashboard: React.FC = () => {
             {/* Recent Applications */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div className="p-4 sm:p-6">
-                    <div className="space-y-4">
+                    <div className="space-y-4 overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-gray-50 border-b border-gray-200">
                                 <tr>
                                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Applicant
                                 </th>
-                                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider  md:table-cell">
                                     Phone Number
                                 </th>
-                                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider  lg:table-cell">
                                     Applied Date
                                 </th>
                                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -257,7 +257,7 @@ const Dashboard: React.FC = () => {
                                             <div className=" flex justify-center items-center">
                                                 <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(app.status)} flex items-center space-x-1 w-fit`}>
                                                     {getStatusIcon(app.status)}
-                                                    <span className="hidden sm:inline">{getStatusText(app.status)}</span>
+                                                    <span className="sm:inline">{getStatusText(app.status)}</span>
                                                 </span>
                                             </div>
                                         </td>
