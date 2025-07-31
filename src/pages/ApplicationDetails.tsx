@@ -149,9 +149,11 @@ const ApplicationDetails = () => {
   const profile = data.data.profile;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen relative">
+      <div className="bg-overlay"></div>
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-white/20 px-4 sm:px-6 py-3 sticky top-0 z-50">
+      <div className="bg-white/50 backdrop-blur-sm border-b border-white/20 px-4 sm:px-6 py-3 sticky top-0 z-50">
+
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
 
           {/* Back Button */}
@@ -186,8 +188,8 @@ const ApplicationDetails = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full sm:w-auto flex items-center justify-center sm:justify-start space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 whitespace-nowrap ${activeTab === tab.id
-                    ? 'bg-gradient-to-r from-red-400 to-red-600 text-white shadow-lg transform scale-105'
-                    : 'text-gray-600 hover:text-gray-900 bg-gray-200'
+                  ? 'bg-[#c31200] text-white shadow-lg transform scale-105'
+                  : 'text-white hover:text-white bg-[#8e8e8e]'
                   }`}
               >
                 <tab.icon className="w-4 h-4" />
@@ -202,7 +204,7 @@ const ApplicationDetails = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left Sidebar - Profile Card */}
           <div className="lg:w-80 flex-shrink-0">
-            <div className="bg-white/90 backdrop-blur-sm rounded-[12px] shadow-xl border border-white/20 overflow-hidden sticky top-20">
+            <div className="bg-white/40 backdrop-blur-xs rounded-[12px] shadow-xl border border-white/20 overflow-hidden sticky top-20">
               {/* Profile Header */}
               <div className="relative bg-gradient-to-r from-red-400 to-red-600 p-8 text-center">
                 <div className="absolute inset-0 bg-black/10"></div>
@@ -355,25 +357,31 @@ const ApplicationDetails = () => {
             {activeTab === 'first-phase' && (
               <div className="w-full">
                 {/* Identity */}
-                <div className="bg-white/90 backdrop-blur-sm rounded-t-[12px] shadow-xl border border-white/20 overflow-hidden">
+                <div className="bg-white/40 backdrop-blur-xs rounded-t-[12px] shadow-xl border border-white/20 overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50 flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center">
                       <IdCard className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900">Identity Documents</h3>
                   </div>
-                  <div className="p-8 space-y-6">
+                  <div className="p-4 sm:p-8 space-y-6">
                     {/* Identity Files */}
                     <div>
                       {profile?.identity?.number && (
                         <h4 className="text-sm font-bold mb-4 text-gray-500 block uppercase tracking-wide">
-                          Identity Number : <span className="text-lg text-gray-900">{profile.identity.number}</span>
+                          Identity Number :{' '}
+                          <span className="text-lg text-gray-900">
+                            {profile.identity.number}
+                          </span>
                         </h4>
                       )}
+
                       {profile?.identity?.docFiles && profile.identity.docFiles.length > 0 ? (
-                        <div className={`grid grid-cols-1 ${profile.identity.docFiles.length > 1 && 'md:grid-cols-2'} gap-4`}>
+                        <div
+                          className={`grid grid-cols-1 ${profile.identity.docFiles.length > 1 ? 'lg:grid-cols-2' : ''
+                            } gap-3 sm:gap-4`}
+                        >
                           {profile.identity.docFiles.map((doc: any, index: number) => {
-                            // Determine title based on doc type
                             let label = '';
                             if (doc.type === 'nid') {
                               label = `NID (${doc.side})`;
@@ -386,23 +394,26 @@ const ApplicationDetails = () => {
                             return (
                               <div
                                 key={index}
-                                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 hover:shadow-lg transition-all duration-200"
+                                className="flex items-center justify-between p-3 sm:p-4 border-2 border-gray-200 rounded-xl sm:rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 hover:shadow-lg transition-all duration-200"
                               >
-                                <div className="flex items-center space-x-3">
-                                  <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
-                                    <Shield className="w-5 h-5 text-white" />
+                                <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0 pr-3">
+                                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg sm:rounded-xl flex items-center justify-center shrink-0">
+                                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                   </div>
-                                  <div>
-                                    <p className="font-bold text-gray-900">{label}</p>
-                                    <p className="text-sm text-gray-500 line-clamp-1 font-semibold">{doc.name}</p>
+                                  <div className="min-w-0 flex-1">
+                                    <p className="font-semibold text-gray-900 text-xs sm:text-sm lg:text-base truncate">{label}</p>
+                                    <p className="text-xs sm:text-sm text-gray-500 truncate font-medium">{doc.name}</p>
                                   </div>
                                 </div>
-                                <button
-                                  onClick={() => window.open(doc.url, '_blank')}
-                                  className="p-2 flex space-x-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 hover:scale-110"
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </button>
+
+                                <div className="shrink-0">
+                                  <button
+                                    onClick={() => window.open(doc.url, '_blank')}
+                                    className="p-2 sm:p-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 hover:scale-105 flex items-center justify-center shadow-sm"
+                                  >
+                                    <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                                  </button>
+                                </div>
                               </div>
                             );
                           })}
@@ -414,9 +425,10 @@ const ApplicationDetails = () => {
                       )}
                     </div>
                   </div>
+
                 </div>
                 {/* Emergency Contact */}
-                <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden">
+                <div className="bg-white/40 backdrop-blur-xs shadow-xl border border-white/20 overflow-hidden">
                   <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center">
@@ -449,7 +461,7 @@ const ApplicationDetails = () => {
                   </div>
                 </div>
                 {/* Address Info */}
-                <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden">
+                <div className="bg-white/40 backdrop-blur-xs shadow-xl border border-white/20 overflow-hidden">
                   <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center">
@@ -489,7 +501,7 @@ const ApplicationDetails = () => {
                   </div>
                 </div>
                 {/* Other Information */}
-                <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden">
+                <div className="bg-white/40 backdrop-blur-xs shadow-xl border border-white/20 overflow-hidden">
                   <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-2xl flex items-center justify-center">
@@ -540,43 +552,50 @@ const ApplicationDetails = () => {
                   </div>
                 </div>
                 {/* CV Document */}
-                <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden">
+                <div className="bg-white/40 backdrop-blur-xs shadow-xl border border-white/20 overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50 flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center">
                       <IdCard className="w-5 h-5 text-white" />
                     </div>
                     <h3 className="text-xl font-bold text-gray-900">CV Document</h3>
                   </div>
-                  <div className="p-8 space-y-6">
-                    {profile?.cvFile && profile.cvFile.url ? (
-                      <div className="flex items-center justify-between p-6 border-2 border-gray-200 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-lg transition-all duration-200">
-                        <div className="flex items-center space-x-4">
-                          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
-                            <FileUser className="w-6 h-6 text-white" />
-                          </div>
-                          <div>
-                            <p className="font-bold text-gray-900 text-lg">{profile.cvFile.name}</p>
-                            <p className="text-sm text-gray-500 font-semibold">PDF Document</p>
-                          </div>
-                        </div>
-                        <div className="flex space-x-3">
-                          <button onClick={() => window.open(profile.cvFile.url, '_blank')} className="p-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-all duration-200 hover:scale-110 shadow-lg">
-                            <Eye className="w-5 h-5" />
-                          </button>
-                          <button onClick={() => handleDownload(profile.cvFile.url, profile.cvFile.name)} className="p-3 bg-green-500 text-white rounded-xl hover:bg-green-600 transition-all duration-200 hover:scale-110 shadow-lg">
-                            <Download className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-center py-8">
-                        <p className="text-gray-500 text-lg font-medium">No CV document found</p>
-                      </div>
-                    )}
-                  </div>
+                  <div className="p-4 sm:p-6 lg:p-8 space-y-6">
+  {profile?.cvFile && profile.cvFile.url ? (
+    <div className="flex items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-2 border-gray-200 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-lg transition-all duration-200">
+      <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0 pr-3">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
+          <FileUser className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="font-bold text-gray-900 text-sm sm:text-base lg:text-lg truncate">{profile.cvFile.name}</p>
+          <p className="text-xs sm:text-sm text-gray-500 font-semibold">PDF Document</p>
+        </div>
+      </div>
+      
+      <div className="flex space-x-2 sm:space-x-3 shrink-0">
+        <button
+          onClick={() => window.open(profile.cvFile.url, '_blank')}
+          className="p-2 sm:p-2.5 lg:p-3 bg-blue-500 text-white rounded-lg sm:rounded-xl hover:bg-blue-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
+        >
+          <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
+        </button>
+        <button
+          onClick={() => handleDownload(profile.cvFile.url, profile.cvFile.name)}
+          className="p-2 sm:p-2.5 lg:p-3 bg-green-500 text-white rounded-lg sm:rounded-xl hover:bg-green-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
+        >
+          <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+        </button>
+      </div>
+    </div>
+  ) : (
+    <div className="text-center py-6 sm:py-8">
+      <p className="text-gray-500 text-base sm:text-lg font-medium">No CV document found</p>
+    </div>
+  )}
+</div>
                 </div>
                 {/* Application Info */}
-                <div className="bg-white/90 backdrop-blur-sm rounded-b-[12px] shadow-xl border border-white/20 overflow-hidden">
+                <div className="bg-white/40 backdrop-blur-xs rounded-b-[12px] shadow-xl border border-white/20 overflow-hidden">
                   <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50 flex items-center space-x-3">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl flex items-center justify-center">
@@ -645,7 +664,7 @@ const ApplicationDetails = () => {
             {activeTab === 'second-phase' && (
               <div className="w-full">
                 {/* Work Info */}
-                <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden rounded-t-[12px]">
+                <div className="bg-white/40 backdrop-blur-xs shadow-xl border border-white/20 overflow-hidden rounded-t-[12px]">
                   <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-amber-600 rounded-2xl flex items-center justify-center">
@@ -697,7 +716,7 @@ const ApplicationDetails = () => {
                 </div>
 
                 {/* Personal Info */}
-                <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden">
+                <div className="bg-white/40 backdrop-blur-xs shadow-xl border border-white/20 overflow-hidden">
                   <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
@@ -748,7 +767,7 @@ const ApplicationDetails = () => {
                 </div>
 
                 {/* Official Info */}
-                <div className="bg-white/90 backdrop-blur-sm shadow-xl border border-white/20 overflow-hidden rounded-b-[12px]">
+                <div className="bg-white/40 backdrop-blur-xs shadow-xl border border-white/20 overflow-hidden rounded-b-[12px]">
                   <div className="p-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 flex items-center">
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center">

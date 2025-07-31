@@ -116,13 +116,14 @@ const Dashboard: React.FC = () => {
     ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen relative">
+        <div className="bg-overlay"></div>
         <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             {/* Stats Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6">
                 <div className="grid grid-cols-2">
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Applied</p>
@@ -135,7 +136,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Submitted</p>
@@ -148,7 +149,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Scheduled</p>
@@ -161,7 +162,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Under Review</p>
@@ -174,7 +175,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Selected</p>
@@ -187,7 +188,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Rejected</p>
@@ -201,12 +202,12 @@ const Dashboard: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="bg-white shadow-sm border border-gray-200">
+                <div className="bg-white/50 shadow-sm border border-gray-200">
                     <DashboardBarChart data={chartData} />
                 </div>
             </div>
             {/* Recent Applications */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+            <div className="bg-white/50 rounded-xl shadow-sm border border-gray-200">
                 <div className="p-4 sm:p-6">
                     <div className="space-y-4 overflow-x-auto">
                         <table className="w-full">
@@ -229,7 +230,7 @@ const Dashboard: React.FC = () => {
                                 </th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="bg-white/50 divide-y divide-gray-200">
                                 {applicationsState?.map((app : any) => (
                                     <tr key={app._id} className="hover:bg-gray-50 transition duration-200">
                                         <td className="px-4 sm:px-6 py-4 whitespace-nowrap">

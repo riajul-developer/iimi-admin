@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-overlay {
+
+
+    position: fixed;
+    /* stays fixed on screen even when scrolling */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../public/images/overly.png');
+    background-size: 40%;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.08;
+    /* very low visibility */
+    z-index: -1;
+    pointer-events: none;
+    /* lets you click through the image */
+}

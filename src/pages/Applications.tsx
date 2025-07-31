@@ -148,10 +148,10 @@ const Applications: React.FC = () => {
 
     if (isLoadingApplication) {
         return (
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-[#f2f2f2]">
                 <Header />
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div className="bg-white/50 rounded-xl shadow-sm border border-gray-200">
                         <div className="p-4 sm:p-6 border-b border-gray-200">
                             <h3 className="text-lg font-semibold text-gray-900">Applications</h3>
                         </div>
@@ -169,10 +169,12 @@ const Applications: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen relative">
             <Header />
+
+            <div className="bg-overlay"></div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+                <div className="bg-white/50 rounded-xl shadow-sm border border-gray-200">
                     <div className="p-4 sm:p-6 border-b border-gray-200">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
@@ -258,7 +260,7 @@ const Applications: React.FC = () => {
                     <div className="p-4 sm:p-6">
                         <div className="space-y-4 overflow-x-auto">
                             <table className="w-full">
-                                <thead className="bg-gray-50 border-b border-gray-200">
+                                <thead className="bg-gray-50/50 border-b border-gray-200">
                                     <tr>
                                         <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Applicant
@@ -277,9 +279,9 @@ const Applications: React.FC = () => {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="bg-white/40 divide-y divide-gray-200">
                                     {applicationsState?.applications?.map((app: any) => (
-                                        <tr key={app._id} className="hover:bg-gray-50 transition duration-200">
+                                        <tr key={app._id} className="hover:bg-gray-50/70 transition duration-200">
                                             <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="bg-indigo-100 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
@@ -349,7 +351,7 @@ const Applications: React.FC = () => {
                                         onClick={() => handlePageChange(meta.page - 1)}
                                         disabled={!meta.hasPrevPage}
                                         className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${meta.hasPrevPage
-                                            ? 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                                            ? 'bg-white/50 text-gray-700 border border-gray-300 hover:bg-gray-50'
                                             : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed'
                                             }`}
                                     >
@@ -365,7 +367,7 @@ const Applications: React.FC = () => {
                                                 onClick={() => handlePageChange(pageNum)}
                                                 className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${pageNum === meta.page
                                                     ? 'bg-indigo-600 text-white'
-                                                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                                                    : 'bg-white/50 text-gray-700 border border-gray-300 hover:bg-gray-50'
                                                     }`}
                                             >
                                                 {pageNum}
@@ -378,7 +380,7 @@ const Applications: React.FC = () => {
                                         onClick={() => handlePageChange(meta.page + 1)}
                                         disabled={!meta.hasNextPage}
                                         className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${meta.hasNextPage
-                                            ? 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                                            ? 'bg-white/50 text-gray-700 border border-gray-300 hover:bg-gray-50'
                                             : 'bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed'
                                             }`}
                                     >
