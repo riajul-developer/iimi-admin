@@ -326,11 +326,11 @@ const ApplicationDetails = () => {
                   }
 
                   if (profile?.ndaFiles?.firstPageFile) {
-                    files.push({ label: 'NDA First Page', url: profile?.ndaFiles?.firstPageFile.url });
+                    files.push({ label: 'NID First Page', url: profile?.ndaFiles?.firstPageFile.url });
                   }
 
                   if (profile?.ndaFiles?.secondPageFile) {
-                    files.push({ label: 'NDA Second Page', url: profile?.ndaFiles?.secondPageFile.url });
+                    files.push({ label: 'NID Second Page', url: profile?.ndaFiles?.secondPageFile.url });
                   }
 
                   if (profile?.agreementFiles?.firstPageFile) {
@@ -797,20 +797,20 @@ const ApplicationDetails = () => {
                       />
                     )}
 
-                    {/* NDA First Page */}
+                    {/* NID First Page */}
                     {profile?.ndaFiles?.firstPageFile && (
                       <FileDisplay
-                        title="NDA - First Page"
+                        title="NID - First Page"
                         file={profile?.ndaFiles?.firstPageFile}
                         gradient="from-blue-100 to-indigo-100"
                         iconColor="text-indigo-600"
                       />
                     )}
 
-                    {/* NDA Second Page */}
+                    {/* NID Second Page */}
                     {profile?.ndaFiles?.secondPageFile && (
                       <FileDisplay
-                        title="NDA - Second Page"
+                        title="NID - Second Page"
                         file={profile?.ndaFiles?.secondPageFile}
                         gradient="from-blue-100 to-indigo-100"
                         iconColor="text-indigo-600"
