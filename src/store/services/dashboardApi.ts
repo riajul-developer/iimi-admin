@@ -35,8 +35,21 @@ export const dashboardApi = createApi({
   reducerPath: 'dashboardApi',
   baseQuery,
   endpoints: (builder) => ({
-    getDashboard: builder.query<DashboardResponse, void>({
-      query: () => '/dashboard',
+    getDashboard: builder.query<any, { startDate?: string; endDate?: string }>({
+      query: ({ startDate, endDate } = {}) => {
+        const params = new URLSearchParams();
+        if (startDate) {
+          params.append('startDate', startDate);
+        }
+        if (endDate) {
+          params.append('endDate', endDate);
+        }        
+        const queryString = params.toString();
+        return {
+          url: `/dashboard${queryString ? `?${queryString}` : ''}`,
+          method: 'GET',
+        };
+      },
     }),
     getRecentApplications: builder.query<RecentApplicationsResponse, void>({
       query: () => '/recent-applications',

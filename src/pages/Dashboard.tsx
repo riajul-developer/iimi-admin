@@ -9,7 +9,13 @@ import { useUpdateApplicationMutation } from '../store/services/applicationApi';
 import DashboardBarChart from '../components/DashboardBarChart';
 
 const Dashboard: React.FC = () => {
-    const { data: dashboardData, isLoading: isLoadingDashboard, refetch: refetchDash } = useGetDashboardQuery();
+
+    const [startDate, setStartDate] = useState<string>('');
+    const [endDate, setEndDate] = useState<string>('');
+
+    const { data: dashboardData, isLoading: isLoadingDashboard, refetch: refetchDash } = useGetDashboardQuery(
+        { startDate: startDate || undefined, endDate: endDate || undefined }
+    );
     const { data: applicationsData, isLoading: isLoadingApplication, refetch: refetchApp } = useGetRecentApplicationsQuery();
     const [updateApplication] = useUpdateApplicationMutation();
     const [statusModalOpen, setStatusModalOpen] = useState(false);
@@ -20,6 +26,11 @@ const Dashboard: React.FC = () => {
 
     
     const navigate = useNavigate();
+
+    const handleClearDates = () => {
+        setStartDate('');
+        setEndDate('');
+    };
 
     const getStatusColor = (status: string): string => {
         switch (status) {
@@ -119,6 +130,47 @@ const Dashboard: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
         <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <div className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                <h1 className="text-xl font-bold text-gray-900">Dashboard</h1>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <label className="text-sm font-medium text-gray-700">
+                        Date Range:
+                    </label>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            className="w-full sm:w-[170px] border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Start Date"
+                        />
+                        <span className="hidden sm:inline text-gray-500 self-center">to</span>
+                        <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            className="w-full sm:w-[170px] border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="End Date"
+                        />
+                        {(startDate || endDate) && (
+                            <button
+                                onClick={handleClearDates}
+                                className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                            >
+                                Clear
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Loading State */}
+            {isLoadingDashboard && (
+                <div className="flex justify-center items-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                </div>
+            )}
+
             {/* Stats Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6">
                 <div className="grid grid-cols-2">
