@@ -21,8 +21,7 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0">
-            <img src='/logo.png' alt='iimi' className='w-[50px] h-[50px] object-contain' />
-            <span className='text-[#C93232] font-bold text-xl'>IIMI</span>
+            <img src='/images/logo.jpg' alt='iimi' className='w-[90px]  object-contain' />
           </div>
 
           {/* Centered Navigation Menu */}
@@ -32,7 +31,7 @@ const Header: React.FC = () => {
                 onClick={() => navigate('/admin/dashboard')}
                 className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition duration-200 ${
                   currentPath.includes('/admin/dashboard')
-                    ? 'bg-indigo-100 text-indigo-700'
+                    ? 'bg-[#c31200] text-white'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
@@ -44,7 +43,7 @@ const Header: React.FC = () => {
                 onClick={() => navigate('/admin/applications')}
                 className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition duration-200 ${
                   currentPath.includes('/admin/applications')
-                    ? 'bg-indigo-100 text-indigo-700'
+                    ? 'bg-[#c31200] text-white'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >

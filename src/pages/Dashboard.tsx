@@ -127,7 +127,8 @@ const Dashboard: React.FC = () => {
     ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen relative">
+        <div className="bg-overlay"></div>
         <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             <div className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
@@ -174,7 +175,7 @@ const Dashboard: React.FC = () => {
             {/* Stats Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6">
                 <div className="grid grid-cols-2">
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Applied</p>
@@ -187,7 +188,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Submitted</p>
@@ -200,7 +201,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Scheduled</p>
@@ -213,7 +214,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Under Review</p>
@@ -226,7 +227,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Selected</p>
@@ -239,7 +240,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         </div>
                     </div>
-                    <div className="bg-white shadow-sm p-4 border border-gray-200">
+                    <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
                         <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm font-medium text-gray-600">Rejected</p>
@@ -253,24 +254,26 @@ const Dashboard: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="bg-white shadow-sm border border-gray-200">
+                <div className="bg-white/50 shadow-sm border border-gray-200">
                     <DashboardBarChart data={chartData} />
                 </div>
             </div>
             {/* Recent Applications */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+            
+            <h1 className="text-xl font-bold text-gray-900 mb-6">Recent Application</h1>
+            <div className="bg-white/50 rounded-xl shadow-sm border border-gray-200">
                 <div className="p-4 sm:p-6">
-                    <div className="space-y-4">
+                    <div className="space-y-4 overflow-x-auto">
                         <table className="w-full">
                             <thead className="bg-gray-50 border-b border-gray-200">
                                 <tr>
                                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Applicant
                                 </th>
-                                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider  md:table-cell">
                                     Phone Number
                                 </th>
-                                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
+                                <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider  lg:table-cell">
                                     Applied Date
                                 </th>
                                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -281,7 +284,7 @@ const Dashboard: React.FC = () => {
                                 </th>
                                 </tr>
                             </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
+                            <tbody className="bg-white/50 divide-y divide-gray-200">
                                 {applicationsState?.map((app : any) => (
                                     <tr key={app._id} className="hover:bg-gray-50 transition duration-200">
                                         <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
@@ -309,7 +312,7 @@ const Dashboard: React.FC = () => {
                                             <div className=" flex justify-center items-center">
                                                 <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(app.status)} flex items-center space-x-1 w-fit`}>
                                                     {getStatusIcon(app.status)}
-                                                    <span className="hidden sm:inline">{getStatusText(app.status)}</span>
+                                                    <span className="sm:inline">{getStatusText(app.status)}</span>
                                                 </span>
                                             </div>
                                         </td>
