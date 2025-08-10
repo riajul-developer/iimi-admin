@@ -10,7 +10,7 @@ import { LoginResponse, useLoginMutation } from '../store/services/authApi'
 const Login = () => {
   const [loginForm, setLoginForm] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
-  
+
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
   const [login, { isLoading }] = useLoginMutation()
   const dispatch = useDispatch()
@@ -19,13 +19,13 @@ const Login = () => {
   const handleLogin = async () => {
     setValidationErrors({})
     try {
-      const res : LoginResponse = await login(loginForm).unwrap()
+      const res: LoginResponse = await login(loginForm).unwrap()
       dispatch(setToken(res?.data?.token))
       localStorage.setItem('authToken', res?.data.token)
       toast.success(res?.message || 'Login successful!')
       navigate('/admin/dashboard')
     } catch (error: any) {
-      if(error.data.errors){
+      if (error.data.errors) {
         const fieldErrors: Record<string, string> = {}
         error.data.errors.forEach((err: { path: string; message: string }) => {
           fieldErrors[err.path] = err.message
@@ -50,8 +50,9 @@ const Login = () => {
         <div className="bg-white/80 backdrop-blur-xl rounded-[5px] shadow-2xl border border-white/20 p-6 sm:p-8 sm:py-10 ">
           <div className="text-center mb-4">
             <div className="relative mb-5">
-              <div className="bg-gradient-to-br from-red-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/25">
-                <Shield className="w-8 h-8 text-white" />
+              <div className=" w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/25">
+                <img src="/logo.png" alt="" />
+                {/* <Shield className="w-8 h-8 text-white" /> */}
               </div>
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">
