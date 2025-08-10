@@ -5,13 +5,13 @@ import { RegisterResponse, useRegisterMutation } from '../store/services/authApi
 
 
 const Register = () => {
-    const [registerForm, setRegisterForm] = useState({
-        email: '',
-        password: '',
-        confirmPassword: '', 
-    })
+  const [registerForm, setRegisterForm] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
   const [showPassword, setShowPassword] = useState(false)
-  
+
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
   const [register, { isLoading }] = useRegisterMutation()
 
@@ -19,33 +19,33 @@ const Register = () => {
     setValidationErrors({})
 
     if (registerForm.password !== registerForm.confirmPassword) {
-        setValidationErrors({ confirmPassword: "Passwords do not match" })
-        return
+      setValidationErrors({ confirmPassword: "Passwords do not match" })
+      return
     }
 
     try {
-        const { email, password } = registerForm
-        const res: RegisterResponse = await register({ email, password }).unwrap()
-        
-        toast.success(res?.message || 'Registered successfully. Please check your email for verification!');
-        setRegisterForm({
-            email: '',
-            password: '',
-            confirmPassword: '', 
-        })
+      const { email, password } = registerForm
+      const res: RegisterResponse = await register({ email, password }).unwrap()
+
+      toast.success(res?.message || 'Registered successfully. Please check your email for verification!');
+      setRegisterForm({
+        email: '',
+        password: '',
+        confirmPassword: '',
+      })
 
     } catch (error: any) {
-        if (error.data.errors) {
+      if (error.data.errors) {
         const fieldErrors: Record<string, string> = {}
         error.data.errors.forEach((err: { path: string; message: string }) => {
-            fieldErrors[err.path] = err.message
+          fieldErrors[err.path] = err.message
         })
         setValidationErrors(fieldErrors)
-        } else {
+      } else {
         toast.error(error?.data.message || 'Something went wrong!')
-        }
+      }
     }
-    }
+  }
 
 
   return (
@@ -61,8 +61,9 @@ const Register = () => {
         <div className="bg-white/80 backdrop-blur-xl rounded-[5px] shadow-2xl border border-white/20 p-6 sm:p-8 sm:py-10 ">
           <div className="text-center mb-4">
             <div className="relative mb-5">
-              <div className="bg-gradient-to-br from-red-500 to-red-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/25">
-                <Shield className="w-8 h-8 text-white" />
+              <div className=" w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/25">
+                <img src="/logo.png" alt="" />
+                {/* <Shield className="w-8 h-8 text-white" /> */}
               </div>
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-2">
@@ -123,41 +124,41 @@ const Register = () => {
 
             {/* Confirm Password Field */}
             <div className="space-y-2">
-                <label className="block text-sm text-left font-semibold text-gray-700">Confirm Password</label>
-                <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={registerForm.confirmPassword}
-                    onChange={(e) =>
-                        setRegisterForm((prev) => ({
-                        ...prev,
-                        confirmPassword: e.target.value,
-                        }))
-                    }
-                    className="w-full pl-10 pr-10 py-3 bg-gray-50/50 border border-gray-200 rounded-[4px] focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-medium"
-                    placeholder="Confirm your password"
-                    />
-                    <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    >
-                    {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                    ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                    )}
-                    </button>
+              <label className="block text-sm text-left font-semibold text-gray-700">Confirm Password</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-gray-400" />
                 </div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={registerForm.confirmPassword}
+                  onChange={(e) =>
+                    setRegisterForm((prev) => ({
+                      ...prev,
+                      confirmPassword: e.target.value,
+                    }))
+                  }
+                  className="w-full pl-10 pr-10 py-3 bg-gray-50/50 border border-gray-200 rounded-[4px] focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-medium"
+                  placeholder="Confirm your password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {validationErrors.confirmPassword && (
-            <p className="text-red-500 text-xs font-medium">
+              <p className="text-red-500 text-xs font-medium">
                 {validationErrors.confirmPassword}
-            </p>
+              </p>
             )}
 
             {/* Register Button */}
