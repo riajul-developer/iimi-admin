@@ -36,6 +36,7 @@ const ApplicationDetails = () => {
   const [updateApplication] = useUpdateApplicationMutation();
   const [activeTab, setActiveTab] = useState('first-phase');
   const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [pdfDownloading, setPdfDownloading] = useState(false);
 
 
   const { downloadAndViewMergedPdf } = useMergedPdfDownload();
@@ -290,6 +291,7 @@ const ApplicationDetails = () => {
               </div>
               <button
                 onClick={() => {
+                  setPdfDownloading(true);
                   const files: { label: string; url: string }[] = [];
                   if (profile?.basic?.profilePicFile?.url) {
                     files.push({ label: "Profile Picture", url: profile.basic.profilePicFile.url });
@@ -342,12 +344,34 @@ const ApplicationDetails = () => {
                   }
                   console.log(files);
 
-                  downloadAndViewMergedPdf(files, { application, profile });
+                  downloadAndViewMergedPdf(files, { application, profile })
+                    .then(() => {
+                      // Reset loading state after successful download
+                      setTimeout(() => setPdfDownloading(false), 2000);
+                    })
+                    .catch((error) => {
+                      console.error('PDF download failed:', error);
+                      setPdfDownloading(false);
+                    });
                 }}
-                className="flex items-center gap-2 px-4 py-2 mx-auto bg-red-600 text-white rounded hover:bg-red-700 mb-7"
+                disabled={pdfDownloading}
+                className={`flex items-center gap-2 px-4 py-2 mx-auto rounded mb-7 transition-all duration-200 ${
+                  pdfDownloading 
+                    ? 'bg-gray-400 text-white cursor-not-allowed' 
+                    : 'bg-red-600 text-white hover:bg-red-700'
+                }`}
               >
-                Download Pdf File
-                <Download size={18} />
+                {pdfDownloading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    <span>Downloading PDF</span>
+                  </>
+                ) : (
+                  <>
+                    Download Pdf File
+                    <Download size={18} />
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -585,7 +609,7 @@ const ApplicationDetails = () => {
                           >
                             <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                           </button>
-                        </div>f
+                        </div>
                       </div>
                     ) : (
                       <div className="text-center py-6 sm:py-8">
