@@ -314,16 +314,17 @@ export const useMergedPdfDownload = () => {
         return 'Document';
       };
 
-      // Function to add image pairs on same page with better sizing
-      const addImagePair = async (pair: any[], titlePrefix: string = '') => {
+      // Function to add image pairs on same page with vertical stacking
+      const addImagePairVertical = async (pair: any[], titlePrefix: string = '') => {
         const tempDoc = new jsPDF();
         const pageWidth = tempDoc.internal.pageSize.getWidth();
         const pageHeight = tempDoc.internal.pageSize.getHeight();
         const margin = 10;
         const labelFontSize = 10;
-        const maxImgWidth = (pageWidth - margin * 3) / 2; // 50% width each
-        const maxImgHeight = pageHeight * 0.4; // 40% of page height
+        const maxImgWidth = pageWidth - margin * 2;
+        const maxImgHeight = (pageHeight - margin * 3 - pair.length * 20) / pair.length; // Divide vertical space
 
+        let y = margin;
         for (let j = 0; j < pair.length; j++) {
           const file = pair[j];
           if (!file) continue;
@@ -355,23 +356,19 @@ export const useMergedPdfDownload = () => {
               imgWidth = imgHeight * aspectRatio;
             }
 
-            // Calculate x position
-            let x = margin;
-            if (pair.length === 1) {
-              x = (pageWidth - imgWidth) / 2; // Center single image
-            } else if (j === 1) {
-              x = pageWidth / 2 + margin / 2; // Right side for second image
-            }
+            // Center horizontally
+            const x = (pageWidth - imgWidth) / 2;
 
             // Draw label above image
             tempDoc.setFontSize(labelFontSize);
             tempDoc.setFont('helvetica', 'bold');
             const label = titlePrefix ? `${titlePrefix} (${getSide(file.label)})` : (file.label || 'Document');
-            tempDoc.text(label, x + imgWidth / 2, margin + 5, { align: 'center' });
+            tempDoc.text(label, pageWidth / 2, y + 5, { align: 'center' });
             tempDoc.setFont('helvetica', 'normal');
 
-            // Draw image
-            tempDoc.addImage(imgDataUrl, 'JPEG', x, margin + 10, imgWidth, imgHeight);
+            // Draw image below label
+            tempDoc.addImage(imgDataUrl, 'JPEG', x, y + 10, imgWidth, imgHeight);
+            y += imgHeight + 30; // 10 for label, 20 for spacing
           } catch (err) {
             console.error(`Failed to load or process file: ${file.url}`, err);
           }
@@ -384,24 +381,24 @@ export const useMergedPdfDownload = () => {
         copiedPages.forEach(page => mergedPdf.addPage(page));
       };
 
-      // Handle NID images (front/back on same page)
+      // Handle NID images (front/back on same page, vertically)
       if (nidImages.length > 0) {
         const front = nidImages.find(f => getSide(f.label) === 'Front') || nidImages[0];
         const back = nidImages.find(f => getSide(f.label) === 'Back');
-        await addImagePair([front, back].filter(Boolean), 'NID');
+        await addImagePairVertical([front, back].filter(Boolean), 'NID');
       }
 
-      // Handle Passport images (front/back on same page)  
+      // Handle Passport images (front/back on same page, vertically)
       if (passportImages.length > 0) {
         const front = passportImages.find(f => getSide(f.label) === 'Front') || passportImages[0];
         const back = passportImages.find(f => getSide(f.label) === 'Back');
-        await addImagePair([front, back].filter(Boolean), 'Passport');
+        await addImagePairVertical([front, back].filter(Boolean), 'Passport');
       }
 
-      // Handle other images in pairs (2 per page)
-      for (let i = 0; i < otherImages.length; i += 2) {
-        const pair = otherImages.slice(i, i + 2);
-        await addImagePair(pair);
+      // Handle other images, one per page, vertically
+      for (let i = 0; i < otherImages.length; i++) {
+        const single = [otherImages[i]];
+        await addImagePairVertical(single);
       }
 
       // Handle PDF documents (with label page before each)

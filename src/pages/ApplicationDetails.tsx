@@ -560,39 +560,39 @@ const ApplicationDetails = () => {
                     <h3 className="text-xl font-bold text-gray-900">CV Document</h3>
                   </div>
                   <div className="p-4 sm:p-6 lg:p-8 space-y-6">
-  {profile?.cvFile && profile.cvFile.url ? (
-    <div className="flex items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-2 border-gray-200 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-lg transition-all duration-200">
-      <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0 pr-3">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
-          <FileUser className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="font-bold text-gray-900 text-sm sm:text-base lg:text-lg truncate">{profile.cvFile.name}</p>
-          <p className="text-xs sm:text-sm text-gray-500 font-semibold">PDF Document</p>
-        </div>
-      </div>
-      
-      <div className="flex space-x-2 sm:space-x-3 shrink-0">
-        <button
-          onClick={() => window.open(profile.cvFile.url, '_blank')}
-          className="p-2 sm:p-2.5 lg:p-3 bg-blue-500 text-white rounded-lg sm:rounded-xl hover:bg-blue-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
-        >
-          <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-        <button
-          onClick={() => handleDownload(profile.cvFile.url, profile.cvFile.name)}
-          className="p-2 sm:p-2.5 lg:p-3 bg-green-500 text-white rounded-lg sm:rounded-xl hover:bg-green-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
-        >
-          <Download className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-      </div>
-    </div>
-  ) : (
-    <div className="text-center py-6 sm:py-8">
-      <p className="text-gray-500 text-base sm:text-lg font-medium">No CV document found</p>
-    </div>
-  )}
-</div>
+                    {profile?.cvFile && profile.cvFile.url ? (
+                      <div className="flex items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-2 border-gray-200 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-lg transition-all duration-200">
+                        <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0 pr-3">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
+                            <FileUser className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-bold text-gray-900 text-sm sm:text-base lg:text-lg truncate">{profile.cvFile.name}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 font-semibold">PDF Document</p>
+                          </div>
+                        </div>
+
+                        <div className="flex space-x-2 sm:space-x-3 shrink-0">
+                          <button
+                            onClick={() => window.open(profile.cvFile.url, '_blank')}
+                            className="p-2 sm:p-2.5 lg:p-3 bg-blue-500 text-white rounded-lg sm:rounded-xl hover:bg-blue-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
+                          >
+                            <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDownload(profile.cvFile.url, profile.cvFile.name)}
+                            className="p-2 sm:p-2.5 lg:p-3 bg-green-500 text-white rounded-lg sm:rounded-xl hover:bg-green-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
+                          >
+                            <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+                          </button>
+                        </div>f
+                      </div>
+                    ) : (
+                      <div className="text-center py-6 sm:py-8">
+                        <p className="text-gray-500 text-base sm:text-lg font-medium">No CV document found</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 {/* Application Info */}
                 <div className="bg-white/40 backdrop-blur-xs rounded-b-[12px] shadow-xl border border-white/20 overflow-hidden">
