@@ -102,11 +102,11 @@ const Dashboard: React.FC = () => {
         });
     };
 
-    const handleUpdateStatus = async (applicationId : string, updateData : { status: string; adminNotes?: string; rejectionReason?: string }) => {
+    const handleUpdateStatus = async (applicationId : string, updateData : { status: string; adminNotes?: string; rejectionReason?: string; remarkText?: string }) => {
         try {
             await updateApplication({
-            id: applicationId,
-            ...updateData,
+                id: applicationId,
+                ...updateData,
             }).unwrap();
     
             toast.success(`Status updated to "${updateData.status.charAt(0).toUpperCase() + updateData.status.slice(1)}"`);
@@ -164,15 +164,11 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Loading State */}
             {isLoadingDashboard && (
                 <div className="flex justify-center items-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
                 </div>
             )}
-
-            {/* Stats Cards */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6">
                 <div className="grid grid-cols-2">
                     <div className="bg-white/50 shadow-sm p-4 border border-gray-200">
@@ -258,7 +254,6 @@ const Dashboard: React.FC = () => {
                     <DashboardBarChart data={chartData} />
                 </div>
             </div>
-            {/* Recent Applications */}
             
             <h1 className="text-xl font-bold text-gray-900 mb-6">Recent Application</h1>
             <div className="bg-white/50 rounded-xl shadow-sm border border-gray-200">

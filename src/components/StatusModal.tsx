@@ -24,6 +24,7 @@ const ApplicationStatus = {
 const StatusModal = ({ isOpen, onClose, application, onUpdateStatus }: any) => {
   const [status, setStatus] = useState(application?.status);
   const [rejectionReason, setRejectionReason] = useState(application?.rejectionReason || '');
+  const [remarkText, setRemarkText] = useState(application?.remarkText || '');
   const [adminNotes, setAdminNotes] = useState(application?.adminNotes || '');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,12 +40,12 @@ const StatusModal = ({ isOpen, onClose, application, onUpdateStatus }: any) => {
       label: 'Scheduled',
       color: 'bg-purple-100 text-purple-800 border-purple-300',
       icon: Calendar,
-    },
+    },    
     {
-      value: ApplicationStatus.SUBMITTED,
-      label: 'Submitted',
-      color: 'bg-indigo-100 text-indigo-800 border-indigo-300',
-      icon: Send,
+      value: ApplicationStatus.SELECTED,
+      label: 'Selected',
+      color: 'bg-green-100 text-green-800 border-green-300',
+      icon: UserCheck,
     },
     {
       value: ApplicationStatus.UNDER_REVIEW,
@@ -53,10 +54,10 @@ const StatusModal = ({ isOpen, onClose, application, onUpdateStatus }: any) => {
       icon: AlertCircle,
     },
     {
-      value: ApplicationStatus.SELECTED,
-      label: 'Selected',
-      color: 'bg-green-100 text-green-800 border-green-300',
-      icon: UserCheck,
+      value: ApplicationStatus.SUBMITTED,
+      label: 'Submitted',
+      color: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+      icon: Send,
     },
     {
       value: ApplicationStatus.REJECTED,
@@ -70,6 +71,7 @@ const StatusModal = ({ isOpen, onClose, application, onUpdateStatus }: any) => {
     if (application) {
       setStatus(application.status || '');
       setRejectionReason(application.rejectionReason || '');
+      setRemarkText(application.remarkText || '');
       setAdminNotes(application.adminNotes || '');
     }
   }, [application]);
@@ -81,6 +83,7 @@ const StatusModal = ({ isOpen, onClose, application, onUpdateStatus }: any) => {
         status,
         adminNotes,
         ...(status === ApplicationStatus.REJECTED && rejectionReason && { rejectionReason }),
+        ...(status === ApplicationStatus.SCHEDULED && remarkText && { remarkText }),
       };
 
       await onUpdateStatus(application._id, updateData);
@@ -166,7 +169,6 @@ const StatusModal = ({ isOpen, onClose, application, onUpdateStatus }: any) => {
                 })}
               </div>
             </div>
-
             {/* Rejection Reason */}
             {status === ApplicationStatus.REJECTED && (
               <div>
@@ -183,7 +185,22 @@ const StatusModal = ({ isOpen, onClose, application, onUpdateStatus }: any) => {
                 />
               </div>
             )}
-
+            {/* Remark Text */}
+            {status === ApplicationStatus.SCHEDULED && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Remark Text *
+                </label>
+                <textarea
+                  value={remarkText}
+                  onChange={(e) => setRemarkText(e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none"
+                  placeholder="Please provide a reason for rejection..."
+                  required
+                />
+              </div>
+            )}
             {/* Admin Notes */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -197,7 +214,7 @@ const StatusModal = ({ isOpen, onClose, application, onUpdateStatus }: any) => {
                 placeholder="Add any internal notes about this application..."
               />
             </div>
-
+            
             {/* Buttons */}
             <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
               <button

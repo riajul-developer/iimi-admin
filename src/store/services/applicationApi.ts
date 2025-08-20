@@ -60,7 +60,7 @@ export const applicationApi = createApi({
     getApplicationById: builder.query<any, string>({
       query: (id) => `/applications/${id}`,
     }),
-    updateApplication: builder.mutation<Application, { id: string; status: string; adminNotes?: string; rejectionReason?: string }>({
+    updateApplication: builder.mutation<Application, { id: string; status: string; adminNotes?: string; rejectionReason?: string, remarkText?: string }>({
       query: ({ id, ...body }) => ({
         url: `/applications/${id}`,
         method: 'PUT',

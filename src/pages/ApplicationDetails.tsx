@@ -36,6 +36,7 @@ const ApplicationDetails = () => {
   const [updateApplication] = useUpdateApplicationMutation();
   const [activeTab, setActiveTab] = useState('first-phase');
   const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [pdfDownloading, setPdfDownloading] = useState(false);
 
 
   const { downloadAndViewMergedPdf } = useMergedPdfDownload();
@@ -259,12 +260,12 @@ const ApplicationDetails = () => {
                   </div>
                 )}
 
-                {profile?.other?.gender && (
+                {profile?.basic?.gender && (
                   <div className="flex items-center space-x-3 text-sm">
                     <div className="w-8 h-8 bg-orange-100 rounded-xl flex items-center justify-center">
                       <User className="w-4 h-4 text-orange-600" />
                     </div>
-                    <span className="text-gray-900 font-medium capitalize">{profile.other.gender}</span>
+                    <span className="text-gray-900 font-medium capitalize">{profile.basic.gender}</span>
                   </div>
                 )}
 
@@ -290,6 +291,7 @@ const ApplicationDetails = () => {
               </div>
               <button
                 onClick={() => {
+                  setPdfDownloading(true);
                   const files: { label: string; url: string }[] = [];
                   if (profile?.basic?.profilePicFile?.url) {
                     files.push({ label: "Profile Picture", url: profile.basic.profilePicFile.url });
@@ -342,12 +344,34 @@ const ApplicationDetails = () => {
                   }
                   console.log(files);
 
-                  downloadAndViewMergedPdf(files, { application, profile });
+                  downloadAndViewMergedPdf(files, { application, profile })
+                    .then(() => {
+                      // Reset loading state after successful download
+                      setTimeout(() => setPdfDownloading(false), 2000);
+                    })
+                    .catch((error) => {
+                      console.error('PDF download failed:', error);
+                      setPdfDownloading(false);
+                    });
                 }}
-                className="flex items-center gap-2 px-4 py-2 mx-auto bg-red-600 text-white rounded hover:bg-red-700 mb-7"
+                disabled={pdfDownloading}
+                className={`flex items-center gap-2 px-4 py-2 mx-auto rounded mb-7 transition-all duration-200 ${
+                  pdfDownloading 
+                    ? 'bg-gray-400 text-white cursor-not-allowed' 
+                    : 'bg-red-600 text-white hover:bg-red-700'
+                }`}
               >
-                Download Pdf File
-                <Download size={18} />
+                {pdfDownloading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    <span>Downloading PDF</span>
+                  </>
+                ) : (
+                  <>
+                    Download Pdf File
+                    <Download size={18} />
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -362,14 +386,14 @@ const ApplicationDetails = () => {
                     <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center">
                       <IdCard className="w-5 h-5 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900">Identity Documents</h3>
+                    <h3 className="text-xl font-bold text-gray-900">National ID Information</h3>
                   </div>
                   <div className="p-4 sm:p-8 space-y-6">
                     {/* Identity Files */}
                     <div>
                       {profile?.identity?.number && (
                         <h4 className="text-sm font-bold mb-4 text-gray-500 block uppercase tracking-wide">
-                          Identity Number :{' '}
+                          NID Number :{' '}
                           <span className="text-lg text-gray-900">
                             {profile.identity.number}
                           </span>
@@ -420,7 +444,7 @@ const ApplicationDetails = () => {
                         </div>
                       ) : (
                         <div className="text-center py-8">
-                          <p className="text-gray-500 text-lg font-medium">No identity documents found</p>
+                          <p className="text-gray-500 text-lg font-medium">No NID documents found</p>
                         </div>
                       )}
                     </div>
@@ -511,7 +535,7 @@ const ApplicationDetails = () => {
                     </div>
                   </div>
                   <div className="p-8">
-                    {profile?.other && (profile.other.fathersName || profile.other.mothersName || profile.other.religion || profile.other.gender || profile.other.maritalStatus) ? (
+                    {profile?.other && (profile.other.fathersName || profile.other.mothersName) ? (
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-4">
                         {profile.other.fathersName && (
                           <div>
@@ -560,39 +584,39 @@ const ApplicationDetails = () => {
                     <h3 className="text-xl font-bold text-gray-900">CV Document</h3>
                   </div>
                   <div className="p-4 sm:p-6 lg:p-8 space-y-6">
-  {profile?.cvFile && profile.cvFile.url ? (
-    <div className="flex items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-2 border-gray-200 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-lg transition-all duration-200">
-      <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0 pr-3">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
-          <FileUser className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="font-bold text-gray-900 text-sm sm:text-base lg:text-lg truncate">{profile.cvFile.name}</p>
-          <p className="text-xs sm:text-sm text-gray-500 font-semibold">PDF Document</p>
-        </div>
-      </div>
-      
-      <div className="flex space-x-2 sm:space-x-3 shrink-0">
-        <button
-          onClick={() => window.open(profile.cvFile.url, '_blank')}
-          className="p-2 sm:p-2.5 lg:p-3 bg-blue-500 text-white rounded-lg sm:rounded-xl hover:bg-blue-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
-        >
-          <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-        <button
-          onClick={() => handleDownload(profile.cvFile.url, profile.cvFile.name)}
-          className="p-2 sm:p-2.5 lg:p-3 bg-green-500 text-white rounded-lg sm:rounded-xl hover:bg-green-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
-        >
-          <Download className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-      </div>
-    </div>
-  ) : (
-    <div className="text-center py-6 sm:py-8">
-      <p className="text-gray-500 text-base sm:text-lg font-medium">No CV document found</p>
-    </div>
-  )}
-</div>
+                    {profile?.cvFile && profile.cvFile.url ? (
+                      <div className="flex items-center justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-2 border-gray-200 rounded-xl sm:rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-lg transition-all duration-200">
+                        <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0 pr-3">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0">
+                            <FileUser className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="font-bold text-gray-900 text-sm sm:text-base lg:text-lg truncate">{profile.cvFile.name}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 font-semibold">PDF Document</p>
+                          </div>
+                        </div>
+
+                        <div className="flex space-x-2 sm:space-x-3 shrink-0">
+                          <button
+                            onClick={() => window.open(profile.cvFile.url, '_blank')}
+                            className="p-2 sm:p-2.5 lg:p-3 bg-blue-500 text-white rounded-lg sm:rounded-xl hover:bg-blue-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
+                          >
+                            <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDownload(profile.cvFile.url, profile.cvFile.name)}
+                            className="p-2 sm:p-2.5 lg:p-3 bg-green-500 text-white rounded-lg sm:rounded-xl hover:bg-green-600 transition-all duration-200 hover:scale-105 sm:hover:scale-110 shadow-md sm:shadow-lg"
+                          >
+                            <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-6 sm:py-8">
+                        <p className="text-gray-500 text-base sm:text-lg font-medium">No CV document found</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 {/* Application Info */}
                 <div className="bg-white/40 backdrop-blur-xs rounded-b-[12px] shadow-xl border border-white/20 overflow-hidden">
@@ -643,13 +667,13 @@ const ApplicationDetails = () => {
                               <p className="text-gray-900 font-semibold text-lg font-mono">{application.rejectionReason}</p>
                             </div>
                           )}
+                          {application.remarkText && (
+                            <div className='mb-4'>
+                              <label className="text-sm font-bold text-gray-500 mb-1 block uppercase tracking-wide">Remark Text</label>
+                              <p className="text-gray-900 font-semibold text-lg font-mono">{application.remarkText}</p>
+                            </div>
+                          )}
                         </div>
-                        {application.adminNotes && (
-                          <div className='mb-4'>
-                            <label className="text-sm font-bold text-gray-500 mb-1 block uppercase tracking-wide">Admin Notes</label>
-                            <p className="text-gray-900 font-semibold text-lg font-mono">{application.adminNotes}</p>
-                          </div>
-                        )}
                       </>
                     ) : (
                       <div className="text-center py-8">
