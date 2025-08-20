@@ -536,7 +536,7 @@ const ApplicationDetails = () => {
                   </div>
                   <div className="p-8">
                     {profile?.other && (profile.other.fathersName || profile.other.mothersName) ? (
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-4">
+                      <div className="grid grid-cols-2 md:grid-cols-2 gap-x-8 gap-y-4">
                         {profile.other.fathersName && (
                           <div>
                             <label className="text-sm font-bold text-gray-500 mb-1 block uppercase tracking-wide">Father's Name</label>
